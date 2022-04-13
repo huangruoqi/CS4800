@@ -1,0 +1,138 @@
+CREATE TABLE forum.instrument (
+                name VARCHAR NOT NULL,
+                pitch VARCHAR NOT NULL,
+                CONSTRAINT instrument_id PRIMARY KEY (name)
+);
+
+
+CREATE TABLE forum.address (
+                addressID VARCHAR NOT NULL,
+                number INTEGER NOT NULL,
+                street1 VARCHAR NOT NULL,
+                street2 VARCHAR,
+                city VARCHAR NOT NULL,
+                state VARCHAR NOT NULL,
+                zipCode VARCHAR NOT NULL,
+                telephone VARCHAR NOT NULL,
+                CONSTRAINT address_id PRIMARY KEY (addressID)
+);
+
+
+CREATE TABLE forum.musician (
+                SSN VARCHAR NOT NULL,
+                name VARCHAR NOT NULL,
+                addressID VARCHAR NOT NULL,
+                CONSTRAINT musician_id PRIMARY KEY (SSN)
+);
+
+
+CREATE TABLE forum.album (
+                albumID VARCHAR NOT NULL,
+                title VARCHAR NOT NULL,
+                release_date DATE NOT NULL,
+                format VARCHAR NOT NULL,
+                age INTEGER NOT NULL,
+                SSN VARCHAR NOT NULL,
+                CONSTRAINT album_id PRIMARY KEY (albumID)
+);
+
+
+CREATE TABLE forum.song (
+                title VARCHAR NOT NULL,
+                length TIME NOT NULL,
+                SSN VARCHAR NOT NULL,
+                albumID VARCHAR NOT NULL,
+                CONSTRAINT song_id PRIMARY KEY (title)
+);
+
+
+CREATE TABLE forum.perform (
+                SSN VARCHAR NOT NULL,
+                title VARCHAR NOT NULL,
+                CONSTRAINT perform_id PRIMARY KEY (SSN, title)
+);
+
+
+CREATE TABLE forum.use (
+                title VARCHAR NOT NULL,
+                name VARCHAR NOT NULL,
+                CONSTRAINT use_id PRIMARY KEY (title, name)
+);
+
+
+CREATE TABLE forum.play (
+                SSN VARCHAR NOT NULL,
+                name VARCHAR NOT NULL,
+                CONSTRAINT play_id PRIMARY KEY (SSN, name)
+);
+
+
+ALTER TABLE forum.use ADD CONSTRAINT instrument_use_fk
+FOREIGN KEY (name)
+REFERENCES forum.instrument (name)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.play ADD CONSTRAINT instrument_play_fk
+FOREIGN KEY (name)
+REFERENCES forum.instrument (name)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.musician ADD CONSTRAINT address_musician_fk
+FOREIGN KEY (addressID)
+REFERENCES forum.address (addressID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.play ADD CONSTRAINT musician_play_fk
+FOREIGN KEY (SSN)
+REFERENCES forum.musician (SSN)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.song ADD CONSTRAINT musician_song_fk
+FOREIGN KEY (SSN)
+REFERENCES forum.musician (SSN)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.perform ADD CONSTRAINT musician_perform_fk
+FOREIGN KEY (SSN)
+REFERENCES forum.musician (SSN)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.album ADD CONSTRAINT musician_album_fk
+FOREIGN KEY (SSN)
+REFERENCES forum.musician (SSN)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.song ADD CONSTRAINT album_song_fk
+FOREIGN KEY (albumID)
+REFERENCES forum.album (albumID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.use ADD CONSTRAINT song_use_fk
+FOREIGN KEY (title)
+REFERENCES forum.song (title)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE forum.perform ADD CONSTRAINT song_perform_fk
+FOREIGN KEY (title)
+REFERENCES forum.song (title)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;

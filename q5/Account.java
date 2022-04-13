@@ -1,5 +1,3 @@
-import javax.management.modelmbean.DescriptorSupport;
-
 public class Account {
     private AccountHolder holder;
     private double balance;
